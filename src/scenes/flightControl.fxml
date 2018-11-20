@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+
+<AnchorPane prefHeight="1600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.Controller">
+    <Label textAlignment="CENTER" fx:id="title" alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" />
+    <GridPane layoutX="700" layoutY="450" alignment="CENTER">
+        <Button fx:id="addAngle" GridPane.rowIndex="1" text="Přidat stupně" />
+        <Label fx:id="turnCount" GridPane.rowIndex="2" textAlignment="CENTER"  text="0 stupňů" />
+    </GridPane>
+</AnchorPane>
