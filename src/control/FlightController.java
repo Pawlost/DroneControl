@@ -2,30 +2,43 @@ package control;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 
 public class FlightController {
+
+    @FXML
+    public Button connect;
     @FXML
     public Button close;
     @FXML
-    private Label title;
+    private Button pass;
     @FXML
-    private Button addAngle;
-    @FXML
-    private Label report;
-
-    ArduinoController controller;
+    private Text report;
 
     @FXML
     public void initialize(){
         ArduinoController controller = new ArduinoController();
 
-        addAngle.setOnAction(event -> controller.initialize());
-        close.setOnAction(event -> controller.close());
-        System.out.print("Connected to arduino");
-    }
+        connect.setOnAction(event -> {controller.initialize();
 
-    public void setArduinoController(ArduinoController controller){
-        this.controller = controller;
+            Thread t = new Thread(){
+                @Override
+                public void run() {
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    while (this.isAlive()) {
+                        if (controller.isConnected()) {
+                            report.setText(report.getText() + "\n" + controller.getOutput());
+                            System.out.println("here");
+                        }
+                    }
+                }
+            };
+            t.start();
+        });
+        close.setOnAction(event -> controller.close());
     }
 }

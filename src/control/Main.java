@@ -12,7 +12,6 @@ import java.io.IOException;
 public class Main extends Application {
 
     private Stage primaryStage;
-    private ArduinoController arduinoController;
     private FXMLLoader resources;
 
     @Override
@@ -20,14 +19,12 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         initializeVariables();
         showStage();
-        enableController();
 
         primaryStage.show();
         System.out.println("Application started");
     }
 
     private void initializeVariables(){
-       arduinoController = new ArduinoController();
        resources = new FXMLLoader(Resources.getResource("flightControl.fxml"));
     }
 
@@ -38,12 +35,6 @@ public class Main extends Application {
         primaryStage.setTitle("Drone Control");
         primaryStage.setScene(new Scene(root, 1600, 900));
 
-    }
-
-    //Pass variables
-    private void enableController(){
-        FlightController flightController = resources.getController();
-        flightController.setArduinoController(arduinoController);
     }
 
     public static void main(String[] args) {

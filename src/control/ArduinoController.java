@@ -32,6 +32,8 @@ public class ArduinoController implements SerialPortEventListener {
      * The output stream to the port
      */
     private OutputStream output;
+
+    private boolean connection = false;
     /**
      * Milliseconds to block while waiting for port open
      */
@@ -40,6 +42,7 @@ public class ArduinoController implements SerialPortEventListener {
      * Default bits per second for COM port.
      */
     private static final int DATA_RATE = 9600;
+    private String report;
 
     public void initialize() {
 
@@ -58,6 +61,7 @@ public class ArduinoController implements SerialPortEventListener {
         }
 
         if (portId == null) {
+            report = "Could not find COM port.";
             System.out.println("Could not find COM port.");
         } else {
             try {
@@ -81,6 +85,7 @@ public class ArduinoController implements SerialPortEventListener {
                 System.err.println(e.toString());
             }
         }
+        System.out.println("Connected to arduino");
     }
 
     /**
@@ -89,6 +94,9 @@ public class ArduinoController implements SerialPortEventListener {
      */
     public synchronized void close() {
         if (serialPort != null) {
+            System.out.println("Disconneting");
+            report = "Disconneting";
+            System.out.println();
             serialPort.removeEventListener();
             serialPort.close();
         }
@@ -100,12 +108,22 @@ public class ArduinoController implements SerialPortEventListener {
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
-                String inputLine = input.readLine();
-                System.out.println(inputLine);
+                System.out.println(input.readLine());
+                report = input.readLine();
+                connection = true;
             } catch (Exception e) {
+                connection = false;
                 this.close();
             }
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
+    }
+
+    public boolean isConnected() {
+        return connection;
+    }
+
+    public String getOutput() {
+        return report;
     }
 }
