@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 
-<AnchorPane prefHeight="1600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.Controller">
+<AnchorPane prefHeight="1600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
     <Label fx:id="title" textAlignment="CENTER"  alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" />
     <GridPane layoutX="700" layoutY="450" alignment="CENTER">
         <Button fx:id="addAngle" GridPane.rowIndex="1" text="Connect" />

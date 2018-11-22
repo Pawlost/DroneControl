@@ -103,7 +103,7 @@ public class ArduinoController implements SerialPortEventListener {
                 String inputLine = input.readLine();
                 System.out.println(inputLine);
             } catch (Exception e) {
-                System.err.println(e.toString());
+                this.close();
             }
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
