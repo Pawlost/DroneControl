@@ -25,12 +25,12 @@ public class Main extends Application {
     }
 
     private void initializeVariables(){
-       resources = new FXMLLoader(Resources.getResource("flightControl.fxml"));
+       resources = new FXMLLoader(Resources.getResource("scenes/flightControl.fxml"));
     }
 
     private void showStage() throws IOException {
         Parent root = resources.load();
-        root.getStylesheets().add(Resources.getResource("style.css").toString());
+        root.getStylesheets().add(Resources.getResource("css/style.css").toString());
 
         primaryStage.setTitle("Drone Control");
         primaryStage.setScene(new Scene(root, 1600, 900));

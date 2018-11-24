@@ -5,17 +5,30 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="1600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
-    <Label fx:id="title" alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" textAlignment="CENTER" />
+<AnchorPane prefHeight="900" prefWidth="1600" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
+    <Label fx:id="title" alignment="TOP_CENTER" layoutX="851.0" layoutY="103.0" text="Flight Control" textAlignment="CENTER" />
     <GridPane alignment="CENTER" layoutX="700" layoutY="450">
-        <Button fx:id="connect" text="Connect" GridPane.rowIndex="1" />
-        <TextField fx:id="input" promptText="Degrees" GridPane.rowIndex="2" />
-        <Button fx:id="pass" text="Pass" GridPane.rowIndex="3" />
-        <ScrollPane prefHeight="206.0" prefWidth="187.0" GridPane.rowIndex="4">
-            <Label fx:id="report" text="something" />
-        </ScrollPane>
-        <Button fx:id="close" text="Disconnect" GridPane.rowIndex="5" />
+      <columnConstraints>
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
     </GridPane>
+     <ScrollPane layoutX="795.0" layoutY="528.0" prefHeight="206.0" prefWidth="187.0" style="-fx-border-style: solid; -fx-border-width: 2; -fx-border-radius: 3;">
+         <Label fx:id="report" text="something" />
+     </ScrollPane>
+     <Button fx:id="close" layoutX="800.0" layoutY="744.0" text="Disconnect" />
+     <Button fx:id="connect" layoutX="807.0" layoutY="379.0" text="Connect" />
+     <TextField fx:id="input" layoutX="814.0" layoutY="438.0" promptText="Degrees" />
+     <Button fx:id="pass" layoutX="793.0" layoutY="478.0" text="Pass" />
 </AnchorPane>
