@@ -4,8 +4,11 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
@@ -20,7 +23,7 @@ public class ArduinoController implements SerialPortEventListener {
             "/dev/tty.usbserial-A9007UX1", // Mac OS X
             "/dev/ttyACM0", // Raspberry Pi
             "/dev/ttyUSB0", // Linux
-            "COM1", // Windows
+            "COM3", // Windows
     };
     /**
      * A BufferedReader which will be fed by a InputStreamReader
@@ -32,20 +35,21 @@ public class ArduinoController implements SerialPortEventListener {
      * The output stream to the port
      */
     private OutputStream output;
-
-    private boolean connection = false;
     /**
      * Milliseconds to block while waiting for port open
      */
-    private static final int TIME_OUT = 2000;
+    private static final int TIME_OUT = 10000;
     /**
      * Default bits per second for COM port.
      */
     private static final int DATA_RATE = 9600;
-    private String report;
 
-    public void initialize() {
+    private Label status;
 
+    public void initialize(Label status) {
+
+        this.status = status;
+        this.status.setText("");
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
@@ -61,7 +65,7 @@ public class ArduinoController implements SerialPortEventListener {
         }
 
         if (portId == null) {
-            report = "Could not find COM port.";
+            showText("Could not find COM port.");
             System.out.println("Could not find COM port.");
         } else {
             try {
@@ -81,6 +85,7 @@ public class ArduinoController implements SerialPortEventListener {
                 // add event listeners
                 serialPort.addEventListener(this);
                 serialPort.notifyOnDataAvailable(true);
+
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
@@ -95,7 +100,7 @@ public class ArduinoController implements SerialPortEventListener {
     public synchronized void close() {
         if (serialPort != null) {
             System.out.println("Disconneting");
-            report = "Disconneting";
+            showText("Disconneting");
             System.out.println();
             serialPort.removeEventListener();
             serialPort.close();
@@ -108,22 +113,20 @@ public class ArduinoController implements SerialPortEventListener {
     public synchronized void serialEvent(SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
-                System.out.println(input.readLine());
-                report = input.readLine();
-                connection = true;
+                showText(input.readLine());
             } catch (Exception e) {
-                connection = false;
+                System.out.println(e.toString());
                 this.close();
             }
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
     }
 
-    public boolean isConnected() {
-        return connection;
+    public synchronized void passData(int angle) throws IOException {
+        output.write(angle);
     }
 
-    public String getOutput() {
-        return report;
+    private void showText(String text) {
+        Platform.runLater(() -> status.setText(status.getText() + "\n" + text));
     }
 }

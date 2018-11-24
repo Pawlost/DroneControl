@@ -2,7 +2,10 @@ package control;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
 
 public class FlightController {
 
@@ -13,32 +16,26 @@ public class FlightController {
     @FXML
     private Button pass;
     @FXML
-    private Text report;
+    private Label report;
+    @FXML
+    private TextField input;
+
+    private ArduinoController controller = new ArduinoController();
 
     @FXML
     public void initialize(){
-        ArduinoController controller = new ArduinoController();
-
-        connect.setOnAction(event -> {controller.initialize();
-
-            Thread t = new Thread(){
-                @Override
-                public void run() {
-                    try {
-                        sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    while (this.isAlive()) {
-                        if (controller.isConnected()) {
-                            report.setText(report.getText() + "\n" + controller.getOutput());
-                            System.out.println("here");
-                        }
-                    }
-                }
-            };
-            t.start();
-        });
+        connect.setOnAction(event -> controller.initialize(report));
+        pass.setOnAction(event -> passData());
         close.setOnAction(event -> controller.close());
+    }
+
+    private void passData(){
+        int angel = Integer.valueOf(input.getText());
+        input.setText("");
+        try {
+            controller.passData(angel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
