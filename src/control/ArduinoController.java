@@ -111,19 +111,20 @@ public class ArduinoController implements SerialPortEventListener {
      * Handle an event on the serial port. Read the data and print it.
      */
     public synchronized void serialEvent(SerialPortEvent oEvent) {
-        if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+       /* if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 showText(input.readLine());
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                this.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
+*/
     }
 
-    public synchronized void passData(int angle) throws IOException {
-        output.write(angle);
+    public synchronized void passData(int data) throws IOException {
+        output.write(data);
+        System.out.println("Passed " + data);
     }
 
     private void showText(String text) {

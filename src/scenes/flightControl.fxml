@@ -11,8 +11,6 @@
     <Label fx:id="title" alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" textAlignment="CENTER" />
     <GridPane alignment="CENTER" layoutX="700" layoutY="450">
         <Button fx:id="connect" text="Connect" GridPane.rowIndex="1" />
-        <TextField fx:id="input" promptText="Degrees" GridPane.rowIndex="2" />
-        <Button fx:id="pass" text="Pass" GridPane.rowIndex="3" />
         <ScrollPane prefHeight="206.0" prefWidth="187.0" GridPane.rowIndex="4">
             <Label fx:id="report" text="something" />
         </ScrollPane>
