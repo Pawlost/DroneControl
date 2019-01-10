@@ -10,7 +10,8 @@
 <AnchorPane prefHeight="1600" prefWidth="900" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
     <Label fx:id="title" alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" textAlignment="CENTER" />
     <GridPane alignment="CENTER" layoutX="700" layoutY="450">
-        <Button fx:id="connect" text="Connect" GridPane.rowIndex="1" />
+        <Button fx:id="connect" text="Connect" GridPane.rowIndex="1" onAction="#setConnect"/>
+        <Button fx:id="land" text="Land" GridPane.rowIndex="2" onAction="#land"/>
         <ScrollPane prefHeight="206.0" prefWidth="187.0" GridPane.rowIndex="4">
             <Label fx:id="report" text="something" />
         </ScrollPane>

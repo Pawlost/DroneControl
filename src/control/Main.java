@@ -22,14 +22,10 @@ public class Main extends Application {
 
         primaryStage.show();
         System.out.println("Application started");
-
-        FlightController controller = resources.getController();
-        controller.addListeners(primaryStage.getScene());
     }
 
     private void initializeVariables(){
        resources = new FXMLLoader(Resources.getResource("flightControl.fxml"));
-
     }
 
     private void showStage() throws IOException {
