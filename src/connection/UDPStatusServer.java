@@ -6,13 +6,13 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-public class UDPServer {
+public class UDPStatusServer {
 
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
 
-    public UDPServer() throws SocketException {
+    public UDPStatusServer() throws SocketException {
         socket = new DatagramSocket(4445);
     }
 

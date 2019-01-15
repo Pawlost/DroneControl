@@ -1,9 +1,11 @@
 package control;
 
 import connection.UDPClient;
+import connection.UDPVideoServer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -11,35 +13,57 @@ import java.net.UnknownHostException;
 
 public class FlightController {
     private UDPClient client;
+    private UDPVideoServer videoServer;
 
-    @FXML
-    public Button connect;
-    @FXML
-    public Button close;
     @FXML
     private Label report;
 
     @FXML
-    private void initialize() {
+    public void initialize(){
+        String[] cmd={"D:\\FFmpeg\\bin\\ffmpeg.exe","-i","udp://0.0.0.0:11111", "-f", "sdl", "Hello"};
         try {
-            client = new UDPClient();
-        } catch (SocketException | UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setConnect(){
-        try {
-            System.out.println(client.sendEcho("command"));
-            System.out.println(client.sendEcho("takeoff"));
+            Runtime.getRuntime().exec(cmd);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void land(){
+    @FXML
+    private void handleonkeytyped(KeyEvent event){
+      if(event.getCode().equals(KeyCode.W)) {
+            command("forward 30");
+        }
+    }
+
+    @FXML
+    private void land(){
+        command("land");
+    }
+
+    @FXML
+    private void getup(){
         try {
-            System.out.println(client.sendEcho("land"));
+            client = new UDPClient();
+//            videoServer = new UDPVideoServer(report);
+            command("command");
+        } catch (SocketException | UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        //videoServer.run();
+        //command("streamon");
+        //command("takeoff");
+    }
+
+    @FXML
+    private void close(){
+        client.close();
+        videoServer.close();
+    }
+
+    private void command(String msg){
+        try {
+            System.out.println(client.sendCommand(msg));
         } catch (IOException e) {
             e.printStackTrace();
         }
