@@ -43,18 +43,21 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>dcm4che repository</id>
-            <url>http://www.dcm4che.org/maven2/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
-            <groupId>xuggle</groupId>
-            <artifactId>xuggle-xuggler</artifactId>
-            <version>5.4</version>
+            <groupId>com.googlecode.gstreamer-java</groupId>
+            <artifactId>gstreamer-java</artifactId>
+            <version>1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.processing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.3.7</version>
         </dependency>
     </dependencies>
 
