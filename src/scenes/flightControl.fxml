@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 
 <?import javafx.scene.image.ImageView?>
-<AnchorPane prefHeight="1600" prefWidth="900" onKeyPressed="#handleonkeytyped" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
+<AnchorPane prefHeight="400" prefWidth="900" onKeyPressed="#handleonkeytyped" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
     <Label alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" textAlignment="CENTER" />
     <GridPane alignment="CENTER" layoutX="700" layoutY="450">
         <ImageView fx:id="video" GridPane.rowIndex="1" />

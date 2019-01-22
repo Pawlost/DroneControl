@@ -1,76 +1,59 @@
 package connection;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
-import processing.core.PApplet;
-import processing.core.PImage;
+import org.jcodec.codecs.h264.H264Decoder;
+import org.jcodec.common.model.ColorSpace;
+import org.jcodec.common.model.Picture;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 
 public class UDPVideoServer {
 
     private DatagramSocket socket;
-    private volatile boolean running;
-    private volatile String received;
+    private DatagramChannel channel;
     public static final int PORT = 11111;
-    public static final String ADDRESS = "192.168.43.57";
-    private PApplet theParent;
-    private PImage img;
-    private byte[] buf = new byte[65536];
+    public static final String ADDRESS = "0.0.0.0";
 
-    public UDPVideoServer(PApplet theParent, int w, int h, PImage img) throws SocketException {
-        running = true;
-        this.theParent = theParent;
-        this.img = img;
+    public UDPVideoServer() {
+        try {
+            socket = new DatagramSocket(null);
+            InetSocketAddress address = new InetSocketAddress(ADDRESS, PORT);
+            socket.bind(address);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     public WritableImage run() {
-        running = true;
         try {
-            socket = new DatagramSocket(PORT, InetAddress.getByName(ADDRESS));
-        } catch (SocketException | UnknownHostException e) {
+            byte[] buf = new byte[2048];
+
+            DatagramPacket packet = new DatagramPacket(buf, buf.length);
+            System.out.println("Listening");
+            socket.receive(packet);
+            System.out.println("recieved");
+            byte[] data = packet.getData();
+            System.out.println(data.length);
+
+
+            ByteBuffer buffer = ByteBuffer.wrap(data, 0, data.length);
+            System.out.println(buffer);
+            H264Decoder decoder = new H264Decoder();
+// assume that sps and pps are set on the decoder
+            Picture out = Picture.create(320, 240, ColorSpace.YUV420);
+            org.jcodec.codecs.h264.io.model.Frame real = decoder.decodeFrame(buffer, out.getData());
+
+            System.out.println(real);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Listening");
-            DatagramPacket packet = new DatagramPacket(buf, buf.length);
-            try {
-                socket.receive(packet);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            InetAddress address = packet.getAddress();
-            int port = packet.getPort();
-            packet = new DatagramPacket(buf, buf.length, address, port);
-            try {
-                socket.receive(packet);
-                System.out.println("recieved");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            byte[] data = packet.getData();
-
-            ByteArrayInputStream bais = new ByteArrayInputStream(data);
-
-            img.loadPixels();
-            try {
-                BufferedImage bimg = ImageIO.read(bais);
-                bimg.getRGB(0, 0, img.width, img.height, img.pixels, 0, img.width);
-                img.updatePixels();
-                socket.close();
-                return SwingFXUtils.toFXImage(bimg, null);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-    }
-
-    public boolean isRunning() {
-        return running;
+        return null;
     }
 }

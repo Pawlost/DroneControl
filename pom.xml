@@ -45,20 +45,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.googlecode.gstreamer-java</groupId>
-            <artifactId>gstreamer-java</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0</version>
         </dependency>
         <dependency>
-            <groupId>org.processing</groupId>
-            <artifactId>core</artifactId>
-            <version>3.3.7</version>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec</artifactId>
+            <version>0.2.3</version>
         </dependency>
     </dependencies>
-
 </project>

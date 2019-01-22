@@ -1,23 +1,18 @@
 package control;
 
 import connection.UDPClient;
-import connection.UDPVideoServer;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import processing.core.PApplet;
-import processing.core.PImage;
 
 import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class FlightController{
     private UDPClient client;
-    private UDPVideoServer videoServer;
+    private Thread videostream;
 
     @FXML
     private Label report;
@@ -27,6 +22,11 @@ public class FlightController{
 
     @FXML
     public void initialize() {
+        try {
+            client = new UDPClient();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -40,24 +40,19 @@ public class FlightController{
     private void land(){
         command("land");
     }
+
     @FXML
     private void startVideo() {
         System.out.println("Started Listening");
-        new Thread(() -> {
-            PApplet applet = new PApplet();
-            PImage image = new PImage();
-            try
-            {
-                UDPVideoServer server = new UDPVideoServer(applet, 100, 100, image);
-                while (server.isRunning()) {
-                   Image send = server.run();
-                   updateImage(send);
-                   Thread.sleep(10);
-                }
-            } catch (SocketException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+       videostream = new Thread(() -> {
+           command("streamon");
+           try {
+               Runtime.getRuntime().exec("ffmpeg -i udp://0.0.0.0:11111 -f sdl Tello");
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       });
+        videostream.start();
     }
 
     private synchronized void updateImage(Image image){
@@ -69,17 +64,19 @@ public class FlightController{
 
     @FXML
     private void getup(){
-        try {
-            client = new UDPClient();
-            command("command");
-        } catch (SocketException | UnknownHostException e) {
-            e.printStackTrace();
-        }
+        command("command");
+       // command("takeoff");
     }
 
     @FXML
     private void close(){
-        client.close();
+        try {
+            videostream.join();
+            command("streamoff");
+            client.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void command(String msg){
