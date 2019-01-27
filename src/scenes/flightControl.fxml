@@ -7,16 +7,18 @@
 <?import javafx.scene.layout.GridPane?>
 
 <?import javafx.scene.image.ImageView?>
-<AnchorPane prefHeight="400" prefWidth="900" onKeyPressed="#handleonkeytyped" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
-    <Label alignment="TOP_CENTER" layoutX="600.0" layoutY="100.0" text="Flight Control" textAlignment="CENTER" />
-    <GridPane alignment="CENTER" layoutX="700" layoutY="450">
-        <ImageView fx:id="video" GridPane.rowIndex="1" />
+<AnchorPane prefHeight="400" prefWidth="400" onKeyPressed="#handleonkeytyped" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="control.FlightController">
+    <Label alignment="TOP_CENTER" layoutX="100.0" layoutY="100.0" text="Flight Control" textAlignment="CENTER" />
+    <GridPane alignment="CENTER" layoutX="100" layoutY="200">
+        <Button text="Start" GridPane.rowIndex="1" onAction="#start"/>
         <Button text="Get up" GridPane.rowIndex="2" onAction="#getup"/>
         <Button text="Land" GridPane.rowIndex="3" onAction="#land"/>
-        <ScrollPane prefHeight="206.0" prefWidth="187.0" GridPane.rowIndex="4">
+        <Button text="STOP" GridPane.rowIndex="4" onAction="#emergency" />
+        <Button text="Agree" GridPane.rowIndex="5" onAction="#agree" />
+        <ScrollPane prefHeight="206.0" prefWidth="187.0" GridPane.rowIndex="5">
             <Label fx:id="report" text="something" />
         </ScrollPane>
-        <Button text="Disconnect" GridPane.rowIndex="5" onAction="#close" />
         <Button text="StartVideo" GridPane.rowIndex="6" onAction="#startVideo" />
+        <Button text="Disconnect" GridPane.rowIndex="7" onAction="#close" />
     </GridPane>
 </AnchorPane>

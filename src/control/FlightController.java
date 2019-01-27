@@ -24,16 +24,46 @@ public class FlightController{
     public void initialize() {
         try {
             client = new UDPClient();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
+    public void start() {
+        command("command");
+    }
+
+    @FXML
     private void handleonkeytyped(KeyEvent event){
       if(event.getCode().equals(KeyCode.W)) {
-            command("forward 30");
-        }
+            command("forward 40");
+      }else if(event.getCode().equals(KeyCode.S)) {
+          command("back 40");
+      }else if(event.getCode().equals(KeyCode.A)) {
+          command("left 40");
+      }else if(event.getCode().equals(KeyCode.D)) {
+          command("right 40");
+      }else if(event.getCode().equals(KeyCode.E)) {
+          command("cw 30");
+      }else if(event.getCode().equals(KeyCode.Q)) {
+          command("ccw 30");
+      }else if(event.getCode().equals(KeyCode.CONTROL)) {
+          command("down 25");
+      }else if(event.getCode().equals(KeyCode.SHIFT)) {
+          command("up 25");
+      }
+    }
+
+    @FXML
+    private void agree(){
+        command("flip b");
+    }
+
+    @FXML
+    private void emergency(){
+        command("emergency");
     }
 
     @FXML
@@ -55,17 +85,9 @@ public class FlightController{
         videostream.start();
     }
 
-    private synchronized void updateImage(Image image){
-        new Thread(() -> {
-            System.out.println("Set Image");
-            video.setImage(image);
-        }).start();
-    }
-
     @FXML
     private void getup(){
-        command("command");
-       // command("takeoff");
+        command("takeoff");
     }
 
     @FXML
@@ -80,10 +102,15 @@ public class FlightController{
     }
 
     private void command(String msg){
-        try {
+
+        new Thread(() -> {
+            try {
             System.out.println(client.sendCommand(msg));
-        } catch (IOException e) {
+            Thread.currentThread().join();
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+        }).start();
+
     }
 }
