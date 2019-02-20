@@ -1,5 +1,8 @@
 package connection;
 
+import control.CommandThread;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.net.*;
 
@@ -15,19 +18,20 @@ public class UDPClient {
         connect();
     }
 
-    public String sendCommand(String msg) throws IOException {
-        byte[] buf = msg.getBytes();
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, PORT);
-        socket.send(packet);
-        buf = new byte[500];
-        packet = new DatagramPacket(buf, buf.length);
-        socket.receive(packet);
-        return new String( packet.getData(), 0, packet.getLength(), "UTF-8");
+    public void sendCommand(String msg, Text text) {
+        sendCommand(msg, text, true);
+    }
+
+    public void sendCommand(String msg, Text text, boolean scrollable) {
+        CommandThread commandThread = new CommandThread(address, socket, msg, text, scrollable);
+        commandThread.start();
     }
 
     public void close() {
-        socket.close();
-        System.out.println("Disconnecting");
+        if(!socket.isClosed()) {
+            socket.close();
+            System.out.println("Disconnecting");
+        }
     }
 
     public void connect() throws SocketException, UnknownHostException {

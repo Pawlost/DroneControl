@@ -33,7 +33,7 @@ public class Main extends Application {
         root.getStylesheets().add(Resources.getResource("style.css").toString());
 
         primaryStage.setTitle("Drone Control");
-        primaryStage.setScene(new Scene(root, 400, 600));
+        primaryStage.setScene(new Scene(root, 600, 600));
     }
 
     public static void main(String[] args) {

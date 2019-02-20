@@ -2,11 +2,10 @@ package control;
 
 import connection.UDPClient;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 
@@ -15,16 +14,24 @@ public class FlightController{
     private Thread videostream;
 
     @FXML
-    private Label report;
+    public Text showBattery;
 
     @FXML
-    private ImageView video;
+    public Text showTime;
+
+    @FXML
+    public Text showSpeed;
+
+    @FXML
+    public volatile Text commandline;
+
+    @FXML
+    public TextField speedField;
 
     @FXML
     public void initialize() {
         try {
             client = new UDPClient();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,50 +39,104 @@ public class FlightController{
 
     @FXML
     public void start() {
-        command("command");
+        client.sendCommand("command", commandline);
+
+        new Thread(() -> {
+            while (Thread.currentThread().isAlive()) {
+                client.sendCommand("battery?", showBattery, false);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        new Thread(() -> {
+            while (Thread.currentThread().isAlive()) {
+                client.sendCommand("speed?", showSpeed, false);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        new Thread(() -> {
+            while (Thread.currentThread().isAlive()) {
+                client.sendCommand("time?", showTime, false);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @FXML
     private void handleonkeytyped(KeyEvent event){
       if(event.getCode().equals(KeyCode.W)) {
-            command("forward 40");
+            client.sendCommand("forward 100", commandline);
       }else if(event.getCode().equals(KeyCode.S)) {
-          command("back 40");
+          client.sendCommand("back 100", commandline);
       }else if(event.getCode().equals(KeyCode.A)) {
-          command("left 40");
+          client.sendCommand("left 100", commandline);
       }else if(event.getCode().equals(KeyCode.D)) {
-          command("right 40");
+          client.sendCommand("right 100", commandline);
       }else if(event.getCode().equals(KeyCode.E)) {
-          command("cw 30");
+          client.sendCommand("cw 30", commandline);
       }else if(event.getCode().equals(KeyCode.Q)) {
-          command("ccw 30");
+          client.sendCommand("ccw 30", commandline);
       }else if(event.getCode().equals(KeyCode.CONTROL)) {
-          command("down 25");
+          client.sendCommand("down 40", commandline);
       }else if(event.getCode().equals(KeyCode.SHIFT)) {
-          command("up 25");
+          client.sendCommand("up 40", commandline);
       }
     }
 
     @FXML
-    private void agree(){
-        command("flip b");
+    private void frontFlip(){
+        client.sendCommand("flip f", commandline);
+    }
+
+    @FXML
+    private void backFlip(){
+        client.sendCommand("flip b", commandline);
+    }
+
+    @FXML
+    private void leftFlip(){
+        client.sendCommand("flip l", commandline);
+    }
+
+    @FXML
+    private void rightFlip(){
+        client.sendCommand("flip r", commandline);
+    }
+
+    @FXML
+    private void setupSpeed(){
+        Integer newSpeed = Integer.valueOf(speedField.getText());
+        client.sendCommand("speed "+newSpeed.toString(), commandline);
     }
 
     @FXML
     private void emergency(){
-        command("emergency");
+        client.sendCommand("emergency", commandline);
     }
 
     @FXML
     private void land(){
-        command("land");
+        client.sendCommand("land", commandline);
     }
 
     @FXML
     private void startVideo() {
         System.out.println("Started Listening");
-       videostream = new Thread(() -> {
-           command("streamon");
+        videostream = new Thread(() -> {
+           client.sendCommand("streamon", commandline);
            try {
                Runtime.getRuntime().exec("ffmpeg -i udp://0.0.0.0:11111 -f sdl Tello");
            } catch (IOException e) {
@@ -87,30 +148,20 @@ public class FlightController{
 
     @FXML
     private void getup(){
-        command("takeoff");
+        client.sendCommand("takeoff", commandline);
     }
 
     @FXML
     private void close(){
         try {
-            videostream.join();
-            command("streamoff");
-            client.close();
+            if(videostream != null) {
+                client.sendCommand("streamoff", commandline);
+                client.close();
+                videostream.join();
+            }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    private void command(String msg){
-
-        new Thread(() -> {
-            try {
-            System.out.println(client.sendCommand(msg));
-            Thread.currentThread().join();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        }).start();
-
     }
 }
