@@ -29,25 +29,17 @@ public class CommandThread extends Thread {
         byte[] buf = msg.getBytes();
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, UDPClient.PORT);
         try {
-
-            if(scrollable) {
-                text.setText(text.getText() + "\n lol");
-            }else{
-                text.setText("lol");
-            }
-
-
             socket.send(packet);
             buf =new byte[500];
             packet = new DatagramPacket(buf, buf.length);
             socket.receive(packet);
 
+            String doneText = new String(packet.getData(), 0,packet.getLength(), StandardCharsets.UTF_8);
+
             if(scrollable) {
-                text.setText(text.getText() + "\n" + new String(packet.getData(),
-                        0,packet.getLength(), StandardCharsets.UTF_8));
+                text.setText(text.getText() + "\n" + doneText);
             }else{
-                text.setText(new String(packet.getData(),
-                        0,packet.getLength(), StandardCharsets.UTF_8));
+                text.setText(doneText);
             }
 
             Thread.currentThread().join();

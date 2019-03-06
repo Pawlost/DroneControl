@@ -48,6 +48,7 @@
             <Text fx:id="showBattery" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
             <Text text="Time" GridPane.rowIndex="3"/>
             <Text fx:id="showTime" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+            <Button text="Enable Status" GridPane.rowIndex="4" onAction="#status"/>
         </GridPane>
 
         <ScrollPane GridPane.rowIndex="7" GridPane.columnIndex="1">

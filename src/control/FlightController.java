@@ -40,37 +40,33 @@ public class FlightController{
     @FXML
     public void start() {
         client.sendCommand("command", commandline);
+    }
+
+    @FXML
+    public void status(){
 
         new Thread(() -> {
             while (Thread.currentThread().isAlive()) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 client.sendCommand("battery?", showBattery, false);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }).start();
 
-        new Thread(() -> {
-            while (Thread.currentThread().isAlive()) {
-                client.sendCommand("speed?", showSpeed, false);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+
+        client.sendCommand("speed?", showSpeed, false);
 
         new Thread(() -> {
             while (Thread.currentThread().isAlive()) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 client.sendCommand("time?", showTime, false);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }).start();
     }
